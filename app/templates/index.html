@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Flask Challenge App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+        
+        .logo {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+        
+        .info-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .info-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #ffeb3b;
+        }
+        
+        .info-value {
+            font-size: 1.4rem;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+        
+        .status {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: bold;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+        
+        .status.connected {
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+            color: white;
+        }
+        
+        .status.disconnected {
+            background: linear-gradient(45deg, #f44336, #ff5722);
+            color: white;
+            animation: pulse-red 2s infinite;
+        }
+        
+        .consumer-status {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 2px solid;
+        }
+        
+        .consumer-connected {
+            border-color: #4caf50;
+        }
+        
+        .consumer-disconnected {
+            border-color: #f44336;
+        }
+        
+        .consumer-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .footer {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .refresh-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .refresh-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes pulse-red {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .container:hover {
+            animation: pulse 2s infinite;
+        }
+        
+        .test-buttons {
+            margin-top: 1rem;
+        }
+        
+        .test-btn {
+            background: rgba(255, 193, 7, 0.8);
+            border: none;
+            color: #333;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            cursor: pointer;
+            margin: 0.25rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .test-btn:hover {
+            background: rgba(255, 193, 7, 1);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🚀</div>
+        <h1>Flask Challenge App</h1>
+        
+        <div class="info-card">
+            <div class="info-title">🖥️ Hostname</div>
+            <div class="info-value">{{ context.hostname }}</div>
+        </div>
+        
+        <div class="info-card">
+            <div class="info-title">🌐 IP Address</div>
+            <div class="info-value">{{ context.ip }}</div>
+        </div>
+        
+        <!-- Estado del Consumer -->
+        <div class="consumer-status {{ 'consumer-connected' if context.consumer_status.connected else 'consumer-disconnected' }}">
+            <div class="info-title">
+                🔄 Consumer Status
+                {% if context.consumer_status.connected %}
+                    <span style="color: #4caf50;">● CONNECTED</span>
+                {% else %}
+                    <span style="color: #f44336;">● DISCONNECTED</span>
+                {% endif %}
+            </div>
+            
+            <div class="consumer-stats">
+                <div class="stat-item">
+                    <span class="stat-number">{{ context.consumer_status.total_requests }}</span>
+                    <span>Requests</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">{{ context.consumer_status.last_seen }}</span>
+                    <span>Last Seen</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">{{ context.consumer_status.error_count }}</span>
+                    <span>Errors</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="status {{ 'connected' if context.consumer_status.connected else 'disconnected' }}">
+            {% if context.consumer_status.connected %}
+                ✅ System Running Successfully
+            {% else %}
+                ❌ Consumer Service Unavailable
+            {% endif %}
+        </div>
+        
+        <!-- Botones de prueba -->
+        <div class="test-buttons">
+            <button class="test-btn" onclick="simulateError()">🧪 Simulate Consumer Error</button>
+            <button class="refresh-btn" onclick="location.reload()">🔄 Refresh Status</button>
+        </div>
+        
+        <div class="footer">
+            <p>🐳 Dockerized Flask Application</p>
+            <p>💙 Challenge by <strong>roxsross</strong></p>
+            <p style="font-size: 0.8rem; margin-top: 0.5rem;">
+                Last updated: {{ context.timestamp }}
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-refresh cada 5 segundos
+        setInterval(() => {
+            location.reload();
+        }, 5000);
+        
+        // Función para simular error del consumer
+        function simulateError() {
+            fetch('/api/consumer/simulate-error')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Consumer error simulated:', data);
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</body>
+</html>
