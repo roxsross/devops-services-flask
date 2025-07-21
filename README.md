@@ -1,5 +1,13 @@
 
+
 # devops-services-flask
+
+<p align="left">
+  <img src="https://img.shields.io/badge/Python-3.12-blue?logo=python" alt="Python Badge" />
+  <img src="https://img.shields.io/badge/Flask-2.x-black?logo=flask" alt="Flask Badge" />
+  <img src="https://img.shields.io/badge/Docker-ready-blue?logo=docker" alt="Docker Badge" />
+  <img src="https://img.shields.io/badge/Kubernetes-ready-blueviolet?logo=kubernetes" alt="Kubernetes Badge" />
+</p>
 
 ![Diagrama de arquitectura](./docs/roxs-diagrama.png)
 
