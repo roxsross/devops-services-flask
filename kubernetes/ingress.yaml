@@ -1,3 +1,8 @@
+# Este manifiesto de Kubernetes define un recurso Ingress para la aplicación Flask.
+# El Ingress permite el acceso externo al servicio 'flask-app-dev' a través de HTTP.
+# Utiliza la anotación 'nginx.ingress.kubernetes.io/rewrite-target' para redirigir todas las solicitudes al raíz ('/').
+# La regla especifica que todas las rutas con el prefijo '/' serán dirigidas al servicio 'flask-app-dev' en el puerto 8000.
+# Es útil para exponer aplicaciones web y gestionar el enrutamiento de tráfico en clústeres Kubernetes.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
