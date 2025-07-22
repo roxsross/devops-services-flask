@@ -1,0 +1,49 @@
+# Descripción:
+# Este manifiesto de Kubernetes define un Deployment para el servicio "flask-consumer-dev".
+# 
+# Componentes principales:
+# - apiVersion: apps/v1
+# - kind: Deployment
+# - metadata: Nombre del deployment.
+# - spec:
+#     - selector: Selecciona los pods con la etiqueta "app: flask-consumer-dev".
+#     - template:
+#         - metadata: Etiquetas para identificar los pods.
+#         - spec:
+#             - containers: Lista de contenedores a desplegar.
+#                 - name: Nombre del contenedor.
+#                 - image: Imagen Docker utilizada.
+#                 - env: Variables de entorno para configurar el contenedor.
+#                     - API_URL: URL del servicio Flask principal.
+#                     - FLASK_DEBUG: Activa el modo debug de Flask.
+#                     - PYTHONUNBUFFERED: Fuerza la salida sin buffer en Python.
+#                     - CONSUMER_DELAY: Configura el retraso del consumidor.
+#
+# Uso:
+# Este deployment se utiliza para desplegar el consumidor Flask en el entorno de desarrollo,
+# permitiendo la comunicación con el servicio principal y facilitando la depuración.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-consumer-dev
+spec:
+  selector:
+    matchLabels:
+      app: flask-consumer-dev
+  template:
+    metadata:
+      labels:
+        app: flask-consumer-dev
+    spec:
+      containers:
+        - name: flask-consumer-dev
+          image: roxsross12/devops-service-flask:1.0.0-consumer
+          env:
+            - name: API_URL
+              value: http://flask-app-dev:8000
+            - name: FLASK_DEBUG
+              value: "1"
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: CONSUMER_DELAY
+              value: "1"

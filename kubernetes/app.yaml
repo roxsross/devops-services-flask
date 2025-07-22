@@ -1,0 +1,44 @@
+# Despliegue de la aplicación Flask en Kubernetes.
+# 
+# apiVersion: apps/v1
+# kind: Deployment
+#
+# Este manifiesto define un Deployment para la aplicación Flask en un entorno de desarrollo.
+# - replicas: Número de réplicas del contenedor (2 para alta disponibilidad).
+# - selector: Selecciona los pods que pertenecen a este deployment usando la etiqueta 'app: flask-app-dev'.
+# - template: Plantilla para los pods creados por el deployment.
+#   - metadata.labels: Etiqueta para identificar los pods.
+#   - spec.containers: Lista de contenedores en el pod.
+#     - name: Nombre del contenedor.
+#     - image: Imagen Docker utilizada para el contenedor.
+#     - env: Variables de entorno para configurar la aplicación Flask:
+#         - API_URL: URL interna para acceder a la API.
+#         - FLASK_ENV: Entorno de ejecución ('development').
+#         - FLASK_DEBUG: Activa el modo debug de Flask.
+#         - PYTHONUNBUFFERED: Evita el buffer en la salida de Python.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app-dev
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flask-app-dev
+  template:
+    metadata:
+      labels:
+        app: flask-app-dev
+    spec:
+      containers:
+        - name: flask-app-dev
+          image: roxsross12/devops-service-flask:1.0.0-app
+          env:
+            - name: API_URL
+              value: http://flask-app-dev:8000
+            - name: FLASK_ENV
+              value: development
+            - name: FLASK_DEBUG
+              value: "1"
+            - name: PYTHONUNBUFFERED
+              value: "1"

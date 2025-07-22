@@ -155,6 +155,77 @@ Puedes modificar los templates, agregar endpoints, integrar bases de datos o sis
 
 ---
 
+## Despliegue en Kubernetes
+
+Este proyecto incluye manifiestos para desplegar los servicios en un clúster Kubernetes. Los archivos se encuentran en la carpeta `kubernetes/`:
+
+- `app.yaml`: Deployment para el servicio principal Flask.
+- `app-service.yaml`: Service para exponer el API Flask dentro del clúster.
+- `consumer.yaml`: Deployment para el servicio consumidor.
+- `ingress.yaml`: Ingress para enrutar tráfico HTTP al servicio Flask.
+
+### Ejemplo de despliegue
+
+1. Aplica los manifiestos en el orden recomendado:
+   ```bash
+   kubectl apply -f kubernetes/app.yaml
+   kubectl apply -f kubernetes/app-service.yaml
+   kubectl apply -f kubernetes/consumer.yaml
+   kubectl apply -f kubernetes/ingress.yaml
+   ```
+
+2. Verifica los recursos:
+   ```bash
+   kubectl get pods
+   kubectl get services
+   kubectl get ingress
+   ```
+
+3. Accede a la aplicación a través del endpoint definido en el Ingress (según configuración de tu clúster).
+
+#### Variables de entorno principales
+
+Los deployments incluyen variables como:
+
+- `API_URL`: URL interna para comunicación entre servicios.
+- `FLASK_DEBUG`, `PYTHONUNBUFFERED`, `CONSUMER_DELAY`: Configuración de debug y comportamiento.
+
+Puedes personalizar los valores editando los archivos YAML antes de desplegar.
+
+---
+## Despliegue con Docker Compose
+
+Este proyecto incluye varios archivos para levantar los servicios con Docker Compose:
+
+- `compose.yml`: Despliegue básico de los servicios Flask y Consumer.
+- `compose.nginx.proxy.yml`: Añade un proxy Nginx para enrutar tráfico HTTP.
+- `compose.scale.yml`: Permite escalar los servicios fácilmente.
+
+### Ejemplo de uso
+
+1. Levanta los servicios básicos:
+   ```bash
+   docker compose -f compose.yml up -d
+   ```
+
+2. Para usar el proxy Nginx:
+   ```bash
+   docker compose -f compose.yml -f compose.nginx.proxy.yml up -d
+   ```
+
+3. Para escalar los servicios:
+   ```bash
+   docker compose -f compose.yml -f compose.scale.yml up -d
+   ```
+
+4. Verifica los contenedores:
+   ```bash
+   docker ps
+   ```
+
+Puedes combinar los archivos según tus necesidades usando la opción `-f` de Docker Compose.
+
+---
 ## Créditos
 
 Desarrollado por **roxsross** para el Challenge DevOps.

@@ -1,0 +1,17 @@
+# Este manifiesto de Kubernetes define un Service de tipo NodePort para la aplicación Flask.
+# El Service se llama 'flask-app-dev' y expone el puerto 8000 tanto externamente (port) como internamente (targetPort).
+# El selector 'app: flask-app-dev' asegura que el tráfico se dirija a los pods etiquetados con 'flask-app-dev'.
+# El protocolo utilizado es TCP.
+# El tipo NodePort permite el acceso externo al servicio a través de un puerto asignado en los nodos del clúster.
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-app-dev
+spec:
+  type: NodePort
+  selector:
+    app: flask-app-dev
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000

@@ -1,0 +1,41 @@
+services:
+  app:
+    image: roxsross12/devops-service-flask:1.0.0-app
+    container_name: flask-app-dev
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    ports:
+      - "8000:8000"
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - PYTHONUNBUFFERED=1
+    networks:
+      - app-network
+  consumer:
+    container_name: flask-consumer-dev
+    image: roxsross12/devops-service-flask:1.0.0-consumer
+    build:
+      context: ./consumer
+      dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    environment:
+      - API_URL=http://flask-app-dev:8000
+      - FLASK_DEBUG=1
+      - PYTHONUNBUFFERED=1
+      - CONSUMER_DELAY=1
+    depends_on:
+      - app
+    networks:
+      - app-network
+    
+
+networks:
+  app-network:
+    driver: bridge
